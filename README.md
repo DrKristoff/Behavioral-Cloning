@@ -23,22 +23,39 @@ NVIDIA architecture
 The architecture that resulted was the following:
 
 Layer (type)                 Output Shape             		Param count
+
 lambda_1 (Lambda)            (None, 160, 320, 3)       		0
+
 cropping2d_1 (Cropping2D)    (None, 160, 225, 3)       		0
+
 conv2d_1 (Conv2D)            (None, 78, 111, 24)      		1824
+
 dropout_1 (Dropout)          (None, 78, 111, 24)       		0
+
 conv2d_2 (Conv2D)            (None, 37, 54, 36)        		21636
+
 conv2d_3 (Conv2D)            (None, 17, 25, 48)        		43248
+
 dropout_2 (Dropout)          (None, 17, 25, 48)        		0
+
 conv2d_4 (Conv2D)            (None, 8, 12, 64)         		27712
+
 conv2d_5 (Conv2D)        	   (None, 6, 10, 64)         		36928
+
 flatten_1 (Flatten)          (None, 3840)              	  0
+
 dense_1 (Dense)              (None, 100)              		384100
+
 dropout_3 (Dropout)          (None, 100)               		0
+
 dense_2 (Dense)              (None, 50)                		5050
+
 dropout_4 (Dropout)          (None, 50)                		0
+
 dense_3 (Dense)              (None, 10)                		510
+
 dense_4 (Dense)              (None, 1)                    11
+
 Total params: 521,019
 Trainable params: 521,019
 Non-trainable params: 0

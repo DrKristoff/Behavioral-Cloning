@@ -2,24 +2,23 @@
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-##Introduction
+## Introduction
 The purpose of this project was to introduce principle of deep learning by training a convolutional neural network to train a car to navigate around a simulated track.  Udacity provided an application developed with the Unity game engine as the simulator.  It was developed using TensorFlow and Keras as a framework.  
 
-##Simulator
+## Simulator
 The Udacity simulator provides two modes, a training mode and an autonomous mode.  In training mode the simulator records driving data based on the manual inputs of the user.  This data includes steering angle, throttle, brake, and speed aligned with visual data from three cameras located on the front left, front center, and front right of the car.  The user controls the car with the arrow keys or WASD, and can also steer using a click-and-drag with the mouse to control precise steering angle.  
 
-![Udacity Simulator](/examples/Udacity_Simulator.jpg?raw=true "Udacity Simulator")
+<img src="./examples/Udacity_Simulator.jpg?raw=true" width="400px" alt="Udacity Simulator">
+<img src=".examples/Simulator_Training _View.jpg?raw=true" width="400px" alt="Simulator Training View">
 
-![Simulator Training View](/examples/Simulator_Training _View.jpg?raw=true "Simulator Training View")
-
-##Model Architecture
+## Model Architecture
 The architecture I used was based on the NVIDIA model.  I doubled the stride length of some of the early layers to reduce the parameter count.  Early on in the development phase I noticed that the accuracy on the training data was very high, but actual performance was very poor.  It was apparent that the powerful architecture was suffering from overfitting to the training data.  To combat this, I experimented with some pooling layers, sub-sampling, and different levels of dropout.  
 
-![NVIDIA architecture](/examples/NVIDIA.jpg?raw=true "NVIDIA architecture")
+<img src="./examples/NVIDIA.jpg?raw=true" width="400px" alt="NVIDIA architecture">
 
 The architecture that resulted was the following:
 _______________________________________________________________________________
-Layer (type)                 		Output Shape             		Param #
+Layer (type)                 		Output Shape             		Param count
 ===============================================================================
 lambda_1 (Lambda)            	(None, 160, 320, 3)       		0
 _______________________________________________________________________________
@@ -57,24 +56,24 @@ Total params: 521,019
 Trainable params: 521,019
 Non-trainable params: 0
 
-##Python Generator
+## Python Generator
 Since I was using tens of thousands of images for the training and validation, memory management quickly became an issue.  I used the Python generator pattern to more efficiently handle such large amounts of images.   The generator pattern allows you to create a function that acts like an iterator.  This allowed me to shuffle and batch portions of the images directory without requiring to load all of them into memory, only what was immediately needed for the current batch operation.  
 
-##Training
+## Training
 To train the model I had to record myself driving around the simulated track manually.  The recording process involved choosing a directory to save images and then pressing the “R” key to start and stop recording.  I also used the mouse rather than the keyboard for steering, that way I would record a much higher level of steering resolution.  For the overall strategy, I took a few different strategies to add to the dataset.  I recorded two full laps of center driving, which involved trying to stay in the very center of the track as much as possible.  I also recorded a few recovery laps, which were laps where I purposely drove to the edge of the track, hit record, and then recovered to the center of the track.
 
-![Example Left Image](/lap1/left_2017_11_11_07_47_08_177.jpg?raw=true "Example Left Image")
-![Example Center Image](/lap1/center_2017_11_11_07_47_08_177.jpg?raw=true "Example Center Image")
-![Example Right Image](/lap1/right_2017_11_11_07_47_08_177.jpg?raw=true "Example Right Image")
+<img src="./lap1/left_2017_11_11_07_47_08_177.jpg?raw=true" width="133px" alt="Example Left Image">
+<img src="./lap1/center_2017_11_11_07_47_08_177.jpg?raw=true" width="133px" alt="Example Center Image">
+<img src="./lap1/right_2017_11_11_07_47_08_177.jpg?raw=true" width="133px" alt="Example Right Image">
 angle = -0.1886793	  throttle = 0	 brake = 0	 speed = 6.361172
 
 Of all the steps of the development process, the training and data collection seemed to have the greatest impact on success.  An important lesson I learned is that your neural network’s performance is very dependent on the data that you feed into it.  I spent a significant amount of time working with training data, both on data collection strategies and data preparation and feature engineering.  
 
-##Data Processing
+## Data Processing
 To split the data into test and training data, I used sklearn function train_test_split with a ratio of 80/20, returning 80% of the data as training data and 20% as validation data.  
 To augment the data I collected through training, I used numpy to flip the images horizontally, while reporting the inverse steering angle.  The result of this is effectively a duplication of driving training distance, as well as providing left/right turn data symmetry.   I also found that the dataset was filled with many steering angles of 0, which introduced a lot of error into the overall model, and caused severe understeer on the corners.  I initially added a check during preprocessing to eliminate all images and data where the steering angle was 0, which made the car drive significantly better around corners.  Conversely, its performance on straight sections tanked.  It was lost and had low confidence on optimal steering angle.  I experimented with a rolling average to eliminate the zeros, and ultimately landed on eliminating a random 50% of the data.  Not a very elegant solution, but it worked for this project1!
 
-##Running the Files
+## Running the Files
 To begin training the neural network run the following command:
 
 python clone.py

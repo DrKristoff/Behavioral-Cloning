@@ -9,6 +9,7 @@ correction = 0.2
 batch = 32
 lines = []
 
+#import_files = ['udacity']
 import_files = ['lap1','lap2','curves1','curves2','recovery1','recovery2','recovery3','recovery4','bridge']
 
 for file in import_files:
@@ -121,6 +122,6 @@ print(model.summary())
 #from keras.models import load_model
 #model = load_model('solution.h5')
 
-model.fit_generator(train_generator, steps_per_epoch= len(train_samples)/batch, validation_data=validation_generator, validation_steps=len(validation_samples)/batch, epochs=2, verbose=1)
+model.fit_generator(train_generator, steps_per_epoch= len(train_samples)/batch, validation_data=validation_generator, validation_steps=len(validation_samples)/batch, epochs=1, verbose=1)
             
 model.save('model.h5')
